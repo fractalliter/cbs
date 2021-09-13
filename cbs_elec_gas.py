@@ -67,7 +67,19 @@ def transform_electricity(dataframe: DataFrame):
         prod_df[['Date', 'Time', 'Value', 'Commodity', 'Frequency', 'Unit']],
         consume_df[['Date', 'Time', 'Value', 'Commodity', 'Frequency', 'Unit']]
     ]
-    return pd.concat(frames)
+    return pd.concat(frames).sort_values(by='Date')
+
+
+def filter_year(df: DataFrame, year: int, item):
+    year_2018 = df[df['Date'].dt.year == year]
+    year_2018.to_csv('{title}_2018.csv'.format(
+        title=item), index=False)
+
+
+def filter_date_range(df: DataFrame, date_range: list):
+    min_date = min(date_range)
+    max_date = max(date_range)
+    return df[(df['Date'] > min_date) & (df['Date'] < max_date)]
 
 
 def get_data(url: str, transformer: FunctionType, date_range: list):
@@ -97,23 +109,34 @@ config = {
 
 
 if __name__ == '__main__':
+    list_of_dfs: dict = {}
     filters: dict = extract_args(sys.argv[1:])
     sources = filters.get('sources')
     date_range = filters.get('date_range')
+
+    # check for source argument of command line
     if sources:
         for item in sources:
-            df = get_data(
+            df: DataFrame = get_data(
                 url=config.get(item).get('url'),
                 transformer=config.get(item).get('transformer'),
                 date_range=date_range
             )
-            df.to_csv('{title}.csv'.format(title=item), index=False)
+            list_of_dfs[item] = df
 
     else:
         for title, values in config.items():
-            df = get_data(
+            df: DataFrame = get_data(
                 url=values.get('url'),
                 transformer=values.get('transformer'),
                 date_range=date_range
             )
-            df.to_csv('{t}.csv'.format(t=title), index=False)
+            list_of_dfs[title] = df
+
+    for title, df in list_of_dfs.items():
+        filter_year(df=df, year=2018, item=title)
+
+        if len(date_range) == 2:
+            df = filter_date_range(df=df, date_range=date_range)
+
+        df.to_csv('{t}.csv'.format(t=title), index=False)
