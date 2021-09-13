@@ -3,6 +3,7 @@
 ## Prerequisites:
 
 * Python 3.7
+* Pip 20.*
 
 ### Installation
 
@@ -28,10 +29,20 @@ python -m unittest
 
 ### Run
 
-The program designed to get 2 different command line argument. first `--source` which can be utilized for indicating the resources for example in `--source=gas,electricity` means get data for gas and electricity and also you can provide only a single sourcs as well. No `--source` argument means both gas and electricity.
-also there is another command argument `--date-range` which can be utilized the same as `--source` but with two different `date` format.
+The program designed to get 2 different command line arguments. `--source` which can be utilized for indicating the resources. for example `--source=gas,electricity` means get data for gas and electricity. Also you can provide only a single source as well. 
+
+No `--source` argument means both gas and electricity.
+
+
+There is another command argument `--date-range` which can be utilized the same as `--source` but with two different `date` format.
 
 ```bash
 python cbs_elec_gas.py --source=gas,electricity --date-range=2021-05-01,1988-12-27
 ```
+
 In this case gas and electricity data from December 1988 to June 2021 will be reterived and transformed.
+
+The output files are `gas.csv` and `electricity.csv` and the transformed data will be:
+
+* Power plant gas consumption in `gas.csv`
+* Electricity supply and consumption `electricity.csv`
