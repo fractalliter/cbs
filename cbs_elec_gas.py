@@ -3,7 +3,6 @@
 import sys
 from types import FunctionType
 import pandas as pd
-from pandas.core import api
 from pandas.core.frame import DataFrame
 import requests
 from requests.exceptions import HTTPError
@@ -68,7 +67,7 @@ def transform_electricity(dataframe: DataFrame):
         prod_df[['Date', 'Time', 'Value', 'Commodity', 'Frequency', 'Unit']],
         consume_df[['Date', 'Time', 'Value', 'Commodity', 'Frequency', 'Unit']]
     ]
-    return pd.concat(frames).sort_values(by='Date', ascending=False)
+    return pd.concat(frames)
 
 
 def get_data(url: str, transformer: FunctionType, date_range: list):
