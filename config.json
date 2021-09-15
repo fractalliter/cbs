@@ -1,0 +1,17 @@
+{
+    "00372eng": {
+        "title": "gas",
+        "columns": ["Periods", "ElectricityPowerPlants_12"],
+        "commodity": {
+            "ElectricityPowerPlants_12": "gas"
+        }
+    },
+    "84575ENG": {
+        "title": "electricity",
+        "columns": ["Periods", "NetProductionTotal_3", "NetConsumptionCalculated_30"],
+        "commodity": {
+            "NetProductionTotal_3": "el_prods",
+            "NetConsumptionCalculated_30": "el_cons"
+        }
+    }
+}
