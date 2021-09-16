@@ -133,7 +133,7 @@ if __name__ == '__main__':
     date_range: "list[str]" = filters.get('date_range')
 
     with open('config.json') as c:
-        configs = json.loads(c)
+        configs = json.load(c)
     for key, value in configs.items():
         datasets_url = get_urls(key)
         configs[key]['datasets'] = datasets_url
