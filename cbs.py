@@ -51,8 +51,10 @@ def transformer(
         datasets_url: "list[dict]",
         column: str,
         commodity: str) -> DataFrame:
-    table_info: Response = requests.get(find_value_in_list_of_dicts(
-        'name', 'TableInfos', 'url', datasets_url))
+    table_info: Response = requests.get(
+        '{url}(0)?$select=Frequency'.format(
+            url=find_value_in_list_of_dicts(
+                'name', 'TableInfos', 'url', datasets_url)))
     info = table_info.json()
     data_propertiese: Response = requests.get(find_value_in_list_of_dicts(
         'name', 'DataProperties', 'url', datasets_url))
@@ -64,7 +66,7 @@ def transformer(
     dataframe = dataframe.assign(
         Value=dataframe[column],
         Time=dataframe['Date'].dt.strftime('%H:%M'),
-        Frequency=info.get('value')[0].get('Frequency'),
+        Frequency=info.get('Frequency'),
         Commodity=commodity,
         Unit=find_value_in_list_of_dicts(
             'Key', column, 'Unit', props.get('value')).replace(" ", "")
@@ -89,8 +91,11 @@ def get_data(config: dict, item) -> DataFrame:
     columns: list = config.get(item).get('columns')
     commodity: dict = config.get(item).get('commodity')
     try:
-        data: Response = requests.get('{url}?$select={columns}'.format(url=find_value_in_list_of_dicts(
-            'name', 'TypedDataSet', 'url', datasets_url), columns=','.join(columns)))
+        data: Response = requests.get(
+            '{url}?$select={columns}'.format(
+                url=find_value_in_list_of_dicts(
+                    'name', 'TypedDataSet', 'url', datasets_url),
+                columns=','.join(columns)))
         data.raise_for_status()
     except HTTPError as http_err:
         print(f'HTTP error occurred: {http_err}', file=sys.stderr)
